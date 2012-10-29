@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World!</string>
     <string name="app_name">ToDoList</string>
-
+	<string name="emptylist">There are no sub items</string>
+	
 </resources>

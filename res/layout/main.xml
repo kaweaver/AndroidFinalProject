@@ -5,8 +5,29 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/currenttitle"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/currentdescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/emptylist" />
+    </FrameLayout>
 
 </LinearLayout>
