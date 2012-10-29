@@ -6,6 +6,7 @@ public class ToDoItem {
 
 	private String title = "";
 	private String description = "";
+	private int id = - 1;
 	private ToDoItem parent = null;
 	private ArrayList< ToDoItem > subToDos = null;
 
@@ -43,6 +44,14 @@ public class ToDoItem {
 
 	public void setParent( ToDoItem parent ) {
 		this.parent = parent;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId( int id ) {
+		this.id = id;
 	}
 
 }
