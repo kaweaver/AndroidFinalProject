@@ -47,6 +47,12 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		String sqlStatement = "SELECT _id, title, description FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + ";";
 		return getReadableDatabase().rawQuery( sqlStatement, null );
 	}
+	
+	public Cursor getById( int id ){
+		String[] args = { Integer.toString( id ) };
+		return getReadableDatabase().rawQuery( "SELECT _id, title, description, parent FROM " + TABLE_NAME + "WHERE _id=?", args );
+	}
+	
 
 	public String getTitle( Cursor c ) {
 		return c.getString( 1 );

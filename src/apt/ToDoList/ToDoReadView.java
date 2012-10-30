@@ -3,6 +3,7 @@ package apt.ToDoList;
 import apt.ToDoList.R;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.*;
@@ -14,6 +15,9 @@ public class ToDoReadView extends ListActivity {
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
 
+	public final static String ID_EXTRA = "apt.ToDoList._id";
+	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
+
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
@@ -23,11 +27,19 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		helper.close();
 	}
-	
+
+	@Override
+	public void onListItemClick( ListView list, View view, int position, long id ) {
+		Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
+		i.putExtra( ID_EXTRA, id );
+		i.putExtra( PARENT_ID_EXTRA, helper.getParentid( todo ) );
+		startActivity( i );
+	}
+
 	private void initList() {
 		if ( todo != null ) {
 			stopManagingCursor( todo );
