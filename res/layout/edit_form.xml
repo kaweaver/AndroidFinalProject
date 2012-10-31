@@ -3,26 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableLayout
-        android:id="@+id/editables"
+    <LinearLayout
+        android:id="@+id/editlinearlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dip"
-        android:shrinkColumns="1" >
+        android:layout_height="wrap_content" >
 
-        <TableRow>
+        <TableLayout
+            android:id="@+id/editables"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dip"
+            android:shrinkColumns="1" >
 
-            <TextView android:text="ToDo Title" />
+            <TableRow>
 
-            <EditText android:id="@+id/title" />
-        </TableRow>
+                <TextView android:text="ToDo Title" />
 
-        <TableRow>
+                <EditText android:id="@+id/title" />
+            </TableRow>
 
-            <TextView android:text="ToDo Description" />
+            <TableRow>
 
-            <EditText android:id="@+id/description" />
-        </TableRow>
-    </TableLayout>
+                <TextView android:text="ToDo Description" />
+
+                <EditText android:id="@+id/description" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="save"
+            android:text="Save" />
+    </LinearLayout>
 
 </ScrollView>

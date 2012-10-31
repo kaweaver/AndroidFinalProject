@@ -20,6 +20,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	public void onCreate( SQLiteDatabase db ) {
 		db.execSQL( DROP_TABLE );
 		db.execSQL( CREATE_TABLE );
+		db.execSQL( "INSERT INTO "+TABLE_NAME+"(_id,title) VALUES (1,\"ToDos\");" );
 	}
 
 	@Override

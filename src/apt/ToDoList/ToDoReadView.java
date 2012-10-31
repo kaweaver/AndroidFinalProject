@@ -39,6 +39,21 @@ public class ToDoReadView extends ListActivity {
 		i.putExtra( PARENT_ID_EXTRA, helper.getParentid( todo ) );
 		startActivity( i );
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		new MenuInflater( this ).inflate( R.menu.option, menu );
+		return super.onCreateOptionsMenu( menu );
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		if ( item.getItemId() == R.id.add ){
+			startActivity( new Intent( ToDoReadView.this, ToDoEditView.class ) );
+			return true;
+		}
+		return super.onOptionsItemSelected( item );
+	}
 
 	private void initList() {
 		if ( todo != null ) {
@@ -46,7 +61,7 @@ public class ToDoReadView extends ListActivity {
 			todo.close();
 		}
 		// TODO: figure out what parent to use
-		todo = helper.getAllbyParent( - 1 );
+		todo = helper.getAllbyParent( 0 );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );

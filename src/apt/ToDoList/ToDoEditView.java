@@ -4,12 +4,13 @@ import apt.ToDoList.R;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.widget.*;
 
 public class ToDoEditView extends Activity {
 
 	EditText title = null;
 	EditText description = null;
+	Button save_button = null;
 	int id = - 1;
 	int parentId = - 1;
 	ToDoItemHelper helper = null;
@@ -22,6 +23,7 @@ public class ToDoEditView extends Activity {
 		helper = new ToDoItemHelper( this );
 		title = ( EditText ) findViewById( R.id.title );
 		description = ( EditText ) findViewById( R.id.description );
+		save_button = ( Button ) findViewById( R.id.save_button );
 		parentId = getIntent().getIntExtra( ToDoReadView.PARENT_ID_EXTRA, - 1 );
 		id = getIntent().getIntExtra( ToDoReadView.ID_EXTRA, - 1 );
 
@@ -36,8 +38,6 @@ public class ToDoEditView extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		// TODO: change to button
-		save();
 	}
 
 	private void load() {
