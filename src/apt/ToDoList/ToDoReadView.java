@@ -12,8 +12,12 @@ import android.widget.*;
 public class ToDoReadView extends ListActivity {
 
 	Cursor todo = null;
+	Cursor current = null;
+	TextView title = null;
+	TextView description = null;
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
+	int parentId = 1;
 
 	public final static String ID_EXTRA = "apt.ToDoList._id";
 	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
@@ -23,6 +27,9 @@ public class ToDoReadView extends ListActivity {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 		helper = new ToDoItemHelper( this );
+		title = ( TextView ) findViewById( R.id.currenttitle );
+		description = ( TextView ) findViewById( R.id.currentdescription );
+		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, 0 );
 		initList();
 	}
 
@@ -34,21 +41,21 @@ public class ToDoReadView extends ListActivity {
 
 	@Override
 	public void onListItemClick( ListView list, View view, int position, long id ) {
-		Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
+		Intent i = new Intent( ToDoReadView.this, ToDoReadView.class );
 		i.putExtra( ID_EXTRA, id );
 		i.putExtra( PARENT_ID_EXTRA, helper.getParentid( todo ) );
 		startActivity( i );
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 		new MenuInflater( this ).inflate( R.menu.option, menu );
 		return super.onCreateOptionsMenu( menu );
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
-		if ( item.getItemId() == R.id.add ){
+		if ( item.getItemId() == R.id.add ) {
 			startActivity( new Intent( ToDoReadView.this, ToDoEditView.class ) );
 			return true;
 		}
@@ -56,12 +63,20 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	private void initList() {
+		if ( current != null ) {
+			stopManagingCursor( current );
+			current.close();
+		}
+		current = helper.getById( parentId );
+		startManagingCursor( current );
+		title.setText( helper.getTitle( current ) );
+		description.setText( helper.getDescription( current ) );
+
 		if ( todo != null ) {
 			stopManagingCursor( todo );
 			todo.close();
 		}
-		// TODO: figure out what parent to use
-		todo = helper.getAllbyParent( 0 );
+		todo = helper.getAllbyParent( parentId );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );

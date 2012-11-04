@@ -10,7 +10,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_NAME = "todos";
 	private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + DATABASE_NAME + ";";
-	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT, parent INTEGER);";
+	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, parent INTEGER);";
 
 	public ToDoItemHelper( Context context ) {
 		super( context, DATABASE_NAME, null, SCHEMA_VERSION );
@@ -20,7 +20,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	public void onCreate( SQLiteDatabase db ) {
 		db.execSQL( DROP_TABLE );
 		db.execSQL( CREATE_TABLE );
-		db.execSQL( "INSERT INTO "+TABLE_NAME+"(_id,title) VALUES (1,\"ToDos\");" );
+		db.execSQL( "INSERT INTO "+TABLE_NAME+" (_id,title) VALUES (1,\"This Is My List\");" );
 	}
 
 	@Override
@@ -51,7 +51,8 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	
 	public Cursor getById( int id ){
 		String[] args = { Integer.toString( id ) };
-		return getReadableDatabase().rawQuery( "SELECT _id, title, description, parent FROM " + TABLE_NAME + "WHERE _id=?", args );
+		String sqlStatement = "SELECT _id, title, description, parent FROM " + TABLE_NAME + " WHERE _id=?";
+		return getReadableDatabase().rawQuery( sqlStatement, args );
 	}
 	
 

@@ -4,6 +4,8 @@ import apt.ToDoList.R;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 public class ToDoEditView extends Activity {
@@ -26,6 +28,12 @@ public class ToDoEditView extends Activity {
 		save_button = ( Button ) findViewById( R.id.save_button );
 		parentId = getIntent().getIntExtra( ToDoReadView.PARENT_ID_EXTRA, - 1 );
 		id = getIntent().getIntExtra( ToDoReadView.ID_EXTRA, - 1 );
+		save_button = ( Button ) findViewById( R.id.save_button );
+		save_button.setOnClickListener( new OnClickListener() {
+			public void onClick( View view ) {
+				save();
+			}
+		} );
 
 	}
 
@@ -47,7 +55,7 @@ public class ToDoEditView extends Activity {
 		title.setText( helper.getTitle( c ) );
 		description.setText( helper.getDescription( c ) );
 		c.close();
-		
+
 	}
 
 	private void save() {
@@ -58,6 +66,7 @@ public class ToDoEditView extends Activity {
 				helper.update( id, title.getText().toString(), description.getText().toString(), parentId );
 			}
 		}
+		finish();
 	}
 
 }
