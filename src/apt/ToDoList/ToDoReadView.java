@@ -33,7 +33,6 @@ public class ToDoReadView extends ListActivity {
 		description = ( TextView ) findViewById( R.id.currentdescription );
 //		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, -1 );
 		id = getIntent().getIntExtra( ID_EXTRA, 1 );
-		initList();
 	}
 
 	@Override
@@ -49,6 +48,12 @@ public class ToDoReadView extends ListActivity {
 //		i.putExtra( PARENT_ID_EXTRA, this.id );
 		startActivity( i );
 	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		initList();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
@@ -63,10 +68,20 @@ public class ToDoReadView extends ListActivity {
 			i.putExtra( PARENT_ID_EXTRA, id );
 			startActivity( i );
 			return true;
+		}else if(item.getItemId() == R.id.edit){
+			Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
+			i.putExtra( ID_EXTRA, this.id );
+			i.putExtra(PARENT_ID_EXTRA, this.parentId);
+			startActivity( i );
+			return true;
+		}else if(item.getItemId() == R.id.delete){
+			deleteItem();
 		}
 		return super.onOptionsItemSelected( item );
 	}
-
+	private void deleteItem(){
+		//helper.delete(id);
+	}
 	private void initList() {
 		if ( current != null ) {
 			stopManagingCursor( current );
