@@ -80,7 +80,17 @@ public class ToDoReadView extends ListActivity {
 		return super.onOptionsItemSelected( item );
 	}
 	private void deleteItem(){
-		//helper.delete(id);
+		deleteAllChildren(id);
+		finish();
+	}
+	private void deleteAllChildren(int id){
+		Cursor c = helper.getAllbyParent(id);
+		c.moveToFirst();
+		for(int i = 0; i < c.getCount(); i++){
+			deleteAllChildren(helper.getId(c));
+			c.moveToNext();
+		}
+		helper.delete(id);
 	}
 	private void initList() {
 		if ( current != null ) {
