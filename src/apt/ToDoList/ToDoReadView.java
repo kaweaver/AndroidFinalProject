@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -17,7 +18,8 @@ public class ToDoReadView extends ListActivity {
 	TextView description = null;
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
-	int parentId = 1;
+	int id = 1;
+	int parentId = -1;
 
 	public final static String ID_EXTRA = "apt.ToDoList._id";
 	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
@@ -29,7 +31,8 @@ public class ToDoReadView extends ListActivity {
 		helper = new ToDoItemHelper( this );
 		title = ( TextView ) findViewById( R.id.currenttitle );
 		description = ( TextView ) findViewById( R.id.currentdescription );
-		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, 0 );
+//		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, -1 );
+		id = getIntent().getIntExtra( ID_EXTRA, 1 );
 		initList();
 	}
 
@@ -42,8 +45,8 @@ public class ToDoReadView extends ListActivity {
 	@Override
 	public void onListItemClick( ListView list, View view, int position, long id ) {
 		Intent i = new Intent( ToDoReadView.this, ToDoReadView.class );
-		i.putExtra( ID_EXTRA, id );
-		i.putExtra( PARENT_ID_EXTRA, helper.getParentid( todo ) );
+		i.putExtra( ID_EXTRA, (int) id );
+//		i.putExtra( PARENT_ID_EXTRA, this.id );
 		startActivity( i );
 	}
 
@@ -56,7 +59,9 @@ public class ToDoReadView extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		if ( item.getItemId() == R.id.add ) {
-			startActivity( new Intent( ToDoReadView.this, ToDoEditView.class ) );
+			Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
+			i.putExtra( PARENT_ID_EXTRA, id );
+			startActivity( i );
 			return true;
 		}
 		return super.onOptionsItemSelected( item );
@@ -67,16 +72,17 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( current );
 			current.close();
 		}
-		current = helper.getById( parentId );
+		current = helper.getById( id );
 		startManagingCursor( current );
+		current.moveToFirst();
 		title.setText( helper.getTitle( current ) );
-		description.setText( helper.getDescription( current ) );
+		description.setText( helper.getDescription( current ));
 
 		if ( todo != null ) {
 			stopManagingCursor( todo );
 			todo.close();
 		}
-		todo = helper.getAllbyParent( parentId );
+		todo = helper.getAllbyParent( id );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );

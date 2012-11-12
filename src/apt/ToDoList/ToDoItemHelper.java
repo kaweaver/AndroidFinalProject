@@ -3,6 +3,7 @@ package apt.ToDoList;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.*;
+import android.util.Log;
 
 class ToDoItemHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "todolist.db";
@@ -55,7 +56,10 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		return getReadableDatabase().rawQuery( sqlStatement, args );
 	}
 	
-
+	public int getId( Cursor c ) {
+		return c.getInt( 0 );
+	}
+	
 	public String getTitle( Cursor c ) {
 		return c.getString( 1 );
 	}
