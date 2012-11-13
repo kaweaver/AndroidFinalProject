@@ -84,8 +84,6 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		cv.put( "title", title );
 		cv.put( "description", description );
 		cv.put( "parent", parentId );
-		
-		Log.d("parent", Integer.toString(parentId));
 
 		getWritableDatabase().update( TABLE_NAME, cv, "_id=?", args );
 

@@ -19,7 +19,7 @@ public class ToDoReadView extends ListActivity {
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
 	int id = 1;
-	int parentId = -1;
+	int parentId = - 1;
 
 	public final static String ID_EXTRA = "apt.ToDoList._id";
 	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
@@ -31,7 +31,7 @@ public class ToDoReadView extends ListActivity {
 		helper = new ToDoItemHelper( this );
 		title = ( TextView ) findViewById( R.id.currenttitle );
 		description = ( TextView ) findViewById( R.id.currentdescription );
-//		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, -1 );
+		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, -1 );
 		id = getIntent().getIntExtra( ID_EXTRA, 1 );
 	}
 
@@ -44,15 +44,17 @@ public class ToDoReadView extends ListActivity {
 	@Override
 	public void onListItemClick( ListView list, View view, int position, long id ) {
 		Intent i = new Intent( ToDoReadView.this, ToDoReadView.class );
-		i.putExtra( ID_EXTRA, (int) id );
-//		i.putExtra( PARENT_ID_EXTRA, this.id );
+		i.putExtra( ID_EXTRA, ( int ) id );
+		i.putExtra( PARENT_ID_EXTRA, this.id );
 		startActivity( i );
 	}
-	
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		initList();
+//		Log.d( "parentId", Integer.toString( parentId ) + " " + title.getText().toString() );
+		
 	}
 
 	@Override
@@ -68,30 +70,51 @@ public class ToDoReadView extends ListActivity {
 			i.putExtra( PARENT_ID_EXTRA, id );
 			startActivity( i );
 			return true;
-		}else if(item.getItemId() == R.id.edit){
+		} else if ( item.getItemId() == R.id.edit ) {
 			Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
 			i.putExtra( ID_EXTRA, this.id );
-			i.putExtra(PARENT_ID_EXTRA, this.parentId);
+			i.putExtra( PARENT_ID_EXTRA, this.parentId );
 			startActivity( i );
 			return true;
-		}else if(item.getItemId() == R.id.delete){
+		} else if ( item.getItemId() == R.id.delete_branch ) {
+			deleteBranch();
+		} else if ( item.getItemId() == R.id.delete_single ) {
 			deleteItem();
 		}
 		return super.onOptionsItemSelected( item );
 	}
-	private void deleteItem(){
-		deleteAllChildren(id);
+
+	private void deleteBranch() {
+		deleteAllChildren( id );
 		finish();
 	}
-	private void deleteAllChildren(int id){
-		Cursor c = helper.getAllbyParent(id);
+
+	private void deleteAllChildren( int id ) {
+		Cursor c = helper.getAllbyParent( id );
 		c.moveToFirst();
-		for(int i = 0; i < c.getCount(); i++){
-			deleteAllChildren(helper.getId(c));
+		for ( int i = 0; i < c.getCount(); i ++ ) {
+			deleteAllChildren( helper.getId( c ) );
 			c.moveToNext();
 		}
-		helper.delete(id);
+		helper.delete( id );
 	}
+
+	private void deleteItem() {
+		reassignParents( parentId, id );
+		helper.delete( id );
+		finish();
+	}
+
+	private void reassignParents( int parentId, int id ) {
+		
+		Cursor c = helper.getAllbyParent( id );
+		c.moveToFirst();
+		for ( int i = 0; i < c.getCount(); i ++ ) {
+			helper.update( helper.getId( c ), helper.getTitle( c ), helper.getDescription( c ), parentId );
+			c.moveToNext();
+		}
+	}
+
 	private void initList() {
 		if ( current != null ) {
 			stopManagingCursor( current );
@@ -101,7 +124,7 @@ public class ToDoReadView extends ListActivity {
 		startManagingCursor( current );
 		current.moveToFirst();
 		title.setText( helper.getTitle( current ) );
-		description.setText( helper.getDescription( current ));
+		description.setText( helper.getDescription( current ) );
 
 		if ( todo != null ) {
 			stopManagingCursor( todo );

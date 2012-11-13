@@ -5,6 +5,7 @@
         android:id="@+id/add"
         android:title="Add"/>
     <item android:id="@+id/edit" android:title="Edit"></item>
-    <item android:id="@+id/delete" android:title="Delete"></item>
+    <item android:id="@+id/delete_branch" android:title="Delete Branch"></item>
+    <item android:id="@+id/delete_single" android:title="Delete Item (Migrate children up)"></item>
 
 </menu>
