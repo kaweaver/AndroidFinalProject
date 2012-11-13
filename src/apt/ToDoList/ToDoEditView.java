@@ -58,6 +58,9 @@ public class ToDoEditView extends Activity {
 		super.onPause();
 	}
 
+	
+	
+	
 	private void load() {
 		Cursor c = helper.getById( id );
 
