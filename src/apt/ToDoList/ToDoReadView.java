@@ -60,6 +60,18 @@ public class ToDoReadView extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 		new MenuInflater( this ).inflate( R.menu.option, menu );
+		//TODO: SET SOME OTHER CONDITION
+		if( id == 1 ){
+
+//			menu.getItem( 1 ).setEnabled( false );
+//			menu.getItem( 1 ).setVisible( false );
+			
+			menu.getItem( 2 ).setEnabled( false );
+			menu.getItem( 2 ).setVisible( false );
+
+			menu.getItem( 3 ).setEnabled( false );
+			menu.getItem( 3 ).setVisible( false );
+		}
 		return super.onCreateOptionsMenu( menu );
 	}
 
