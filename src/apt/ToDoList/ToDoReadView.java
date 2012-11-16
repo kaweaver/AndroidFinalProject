@@ -60,7 +60,8 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu ) {
+	public boolean onPrepareOptionsMenu( Menu menu ) {
+		menu.clear();
 		new MenuInflater( this ).inflate( R.menu.option, menu );
 		// TODO: SET SOME OTHER CONDITION
 		if ( id == 1 ) {
@@ -69,9 +70,11 @@ public class ToDoReadView extends ListActivity {
 
 			menu.getItem( 3 ).setEnabled( false );
 			menu.getItem( 3 ).setVisible( false );
-
-			menu.getItem( 4 ).setEnabled( false );
-			menu.getItem( 4 ).setVisible( false );
+			
+			if( ToDoReadView.cut_todo == null ){
+				menu.getItem( 4 ).setEnabled( false );
+				menu.getItem( 4 ).setVisible( false );
+			}
 		}
 		if ( ToDoReadView.cut_todo != null ) {
 			menu.getItem( 4 ).setTitle( "Cancel Cut" );
@@ -81,7 +84,7 @@ public class ToDoReadView extends ListActivity {
 			menu.getItem( 5 ).setEnabled( false );
 			menu.getItem( 5 ).setVisible( false );
 		}
-		return super.onCreateOptionsMenu( menu );
+		return super.onPrepareOptionsMenu( menu );
 	}
 
 	@Override
@@ -102,18 +105,20 @@ public class ToDoReadView extends ListActivity {
 		} else if ( item.getItemId() == R.id.delete_single ) {
 			deleteItem();
 		} else if ( item.getItemId() == R.id.cut_item ) {
-			if( ToDoReadView.cut_todo == null){
+			if ( ToDoReadView.cut_todo == null ) {
 				ToDoReadView.cut_todo = new ToDoItem( id, parentId );
 			} else {
 				ToDoReadView.cut_todo = null;
-			}			
+			}
+			invalidateOptionsMenu();
 		} else if ( item.getItemId() == R.id.paste_item ) {
 			pasteItem();
+			invalidateOptionsMenu();
 		}
 		return super.onOptionsItemSelected( item );
 	}
 
-	private void pasteItem(){
+	private void pasteItem() {
 
 		if ( current != null ) {
 			stopManagingCursor( current );
@@ -123,12 +128,12 @@ public class ToDoReadView extends ListActivity {
 		startManagingCursor( current );
 		current.moveToFirst();
 		helper.update( ToDoReadView.cut_todo.getId(), helper.getTitle( current ), helper.getDescription( current ), id );
-		
+
 		ToDoReadView.cut_todo = null;
 
 		initList();
 	}
-	
+
 	private void deleteBranch() {
 		deleteAllChildren( id );
 		finish();
