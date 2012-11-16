@@ -18,6 +18,7 @@ public class ToDoReadView extends ListActivity {
 	TextView description = null;
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
+	static ToDoItem cut_todo = null;
 	int id = 1;
 	int parentId = - 1;
 
@@ -31,7 +32,7 @@ public class ToDoReadView extends ListActivity {
 		helper = new ToDoItemHelper( this );
 		title = ( TextView ) findViewById( R.id.currenttitle );
 		description = ( TextView ) findViewById( R.id.currentdescription );
-		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, -1 );
+		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
 		id = getIntent().getIntExtra( ID_EXTRA, 1 );
 	}
 
@@ -53,24 +54,32 @@ public class ToDoReadView extends ListActivity {
 	public void onResume() {
 		super.onResume();
 		initList();
-//		Log.d( "parentId", Integer.toString( parentId ) + " " + title.getText().toString() );
-		
+		// Log.d( "parentId", Integer.toString( parentId ) + " " +
+		// title.getText().toString() );
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 		new MenuInflater( this ).inflate( R.menu.option, menu );
-		//TODO: SET SOME OTHER CONDITION
-		if( id == 1 ){
-
-//			menu.getItem( 1 ).setEnabled( false );
-//			menu.getItem( 1 ).setVisible( false );
-			
+		// TODO: SET SOME OTHER CONDITION
+		if ( id == 1 ) {
 			menu.getItem( 2 ).setEnabled( false );
 			menu.getItem( 2 ).setVisible( false );
 
 			menu.getItem( 3 ).setEnabled( false );
 			menu.getItem( 3 ).setVisible( false );
+
+			menu.getItem( 4 ).setEnabled( false );
+			menu.getItem( 4 ).setVisible( false );
+		}
+		if ( ToDoReadView.cut_todo != null ) {
+			menu.getItem( 4 ).setTitle( "Cancel Cut" );
+			menu.getItem( 5 ).setEnabled( true );
+			menu.getItem( 5 ).setVisible( true );
+		} else {
+			menu.getItem( 5 ).setEnabled( false );
+			menu.getItem( 5 ).setVisible( false );
 		}
 		return super.onCreateOptionsMenu( menu );
 	}
@@ -92,10 +101,34 @@ public class ToDoReadView extends ListActivity {
 			deleteBranch();
 		} else if ( item.getItemId() == R.id.delete_single ) {
 			deleteItem();
+		} else if ( item.getItemId() == R.id.cut_item ) {
+			if( ToDoReadView.cut_todo == null){
+				ToDoReadView.cut_todo = new ToDoItem( id, parentId );
+			} else {
+				ToDoReadView.cut_todo = null;
+			}			
+		} else if ( item.getItemId() == R.id.paste_item ) {
+			pasteItem();
 		}
 		return super.onOptionsItemSelected( item );
 	}
 
+	private void pasteItem(){
+
+		if ( current != null ) {
+			stopManagingCursor( current );
+			current.close();
+		}
+		current = helper.getById( ToDoReadView.cut_todo.getId() );
+		startManagingCursor( current );
+		current.moveToFirst();
+		helper.update( ToDoReadView.cut_todo.getId(), helper.getTitle( current ), helper.getDescription( current ), id );
+		
+		ToDoReadView.cut_todo = null;
+
+		initList();
+	}
+	
 	private void deleteBranch() {
 		deleteAllChildren( id );
 		finish();
@@ -118,7 +151,6 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	private void reassignParents( int parentId, int id ) {
-		
 		Cursor c = helper.getAllbyParent( id );
 		c.moveToFirst();
 		for ( int i = 0; i < c.getCount(); i ++ ) {

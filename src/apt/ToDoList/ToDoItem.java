@@ -7,8 +7,14 @@ public class ToDoItem {
 	private String title = "";
 	private String description = "";
 	private int id = - 1;
+	private int parent_id = -1;
 	private ToDoItem parent = null;
 	private ArrayList< ToDoItem > subToDos = null;
+	
+	public ToDoItem(int id, int parent_id) {
+		this.id = id;
+		this.parent_id = parent_id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -52,6 +58,14 @@ public class ToDoItem {
 
 	public void setId( int id ) {
 		this.id = id;
+	}
+	
+	public int getParentId(){
+		return parent_id;
+	}
+	
+	public void setParentId(int parent_id){
+		this.parent_id = parent_id;
 	}
 
 }
