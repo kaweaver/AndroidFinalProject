@@ -61,25 +61,36 @@ public class ToDoReadView extends ListActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu( Menu menu ) {
+		/*
+		 * 0 is add 1 is edit 2 is delete branch 3 is delete item 4 is cut / cancel
+		 * cut 5 is paste
+		 */
 		menu.clear();
 		new MenuInflater( this ).inflate( R.menu.option, menu );
-		// TODO: SET SOME OTHER CONDITION
 		if ( id == 1 ) {
 			menu.getItem( 2 ).setEnabled( false );
 			menu.getItem( 2 ).setVisible( false );
 
 			menu.getItem( 3 ).setEnabled( false );
 			menu.getItem( 3 ).setVisible( false );
-			
-			if( ToDoReadView.cut_todo == null ){
+
+			if ( ToDoReadView.cut_todo == null ) {
 				menu.getItem( 4 ).setEnabled( false );
 				menu.getItem( 4 ).setVisible( false );
 			}
 		}
+
 		if ( ToDoReadView.cut_todo != null ) {
 			menu.getItem( 4 ).setTitle( "Cancel Cut" );
-			menu.getItem( 5 ).setEnabled( true );
-			menu.getItem( 5 ).setVisible( true );
+
+			if ( ! isDescendant( ToDoReadView.cut_todo.getId(), this.id ) ) {
+				menu.getItem( 5 ).setEnabled( true );
+				menu.getItem( 5 ).setVisible( true );
+			} else {
+				menu.getItem( 5 ).setEnabled( false );
+				menu.getItem( 5 ).setVisible( false );
+			}
+			
 		} else {
 			menu.getItem( 5 ).setEnabled( false );
 			menu.getItem( 5 ).setVisible( false );
@@ -119,7 +130,6 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	private void pasteItem() {
-
 		if ( current != null ) {
 			stopManagingCursor( current );
 			current.close();
@@ -132,6 +142,31 @@ public class ToDoReadView extends ListActivity {
 		ToDoReadView.cut_todo = null;
 
 		initList();
+	}
+
+	/**
+	 * This will tell if question_id is an ancestor of this.id
+	 * 
+	 * @param question_id
+	 *          the id in question ancestor the ancestor id
+	 * @return true if question_id is an ancestor of this.id false otherwise
+	 */
+	private boolean isDescendant( int ancestor, int question_id ) {
+		if ( question_id <= 1 ) {
+			return false;
+		} else if ( ancestor == question_id ) {
+			return true;
+		}
+
+		if ( current != null ) {
+			stopManagingCursor( current );
+			current.close();
+		}
+		current = helper.getById( question_id );
+		startManagingCursor( current );
+		current.moveToFirst();
+
+		return isDescendant( ancestor, helper.getParentid( current ) );
 	}
 
 	private void deleteBranch() {
