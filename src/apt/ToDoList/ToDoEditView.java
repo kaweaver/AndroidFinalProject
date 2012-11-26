@@ -13,8 +13,7 @@ public class ToDoEditView extends Activity {
 	EditText title = null;
 	EditText description = null;
 	Button save_button = null;
-	int id = - 1;
-	int parentId = - 1;
+	ToDoItem editToDo = null;
 	ToDoItemHelper helper = null;
 
 	@Override
@@ -22,20 +21,18 @@ public class ToDoEditView extends Activity {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.edit_form );
 		helper = new ToDoItemHelper( this );
-		
-		id = getIntent().getIntExtra( ToDoReadView.ID_EXTRA, - 1 );
-		
+
+		editToDo = new ToDoItem( getIntent().getIntExtra( ToDoReadView.ID_EXTRA, - 1 ) );
 
 		title = ( EditText ) findViewById( R.id.title );
 		description = ( EditText ) findViewById( R.id.description );
-		parentId = getIntent().getIntExtra( ToDoReadView.PARENT_ID_EXTRA, - 1 );
-		
-		if(id != -1){
+
+		if ( editToDo.getId() != - 1 ) {
 			load();
 		}
-		
+
 		save_button = ( Button ) findViewById( R.id.save_button );
-		
+
 		save_button = ( Button ) findViewById( R.id.save_button );
 		save_button.setOnClickListener( new OnClickListener() {
 			public void onClick( View view ) {
@@ -57,22 +54,22 @@ public class ToDoEditView extends Activity {
 	}
 
 	private void load() {
-		Cursor c = helper.getById( id );
+		Cursor c = helper.getById( editToDo.getId() );
 
 		c.moveToFirst();
 		title.setText( helper.getTitle( c ) );
 		description.setText( helper.getDescription( c ) );
-		parentId = helper.getParentid( c );
+		editToDo.setParentId( helper.getParentid( c ) );
 		c.close();
 
 	}
 
 	private void save() {
 		if ( title.getText().toString().length() > 0 ) {
-			if ( id == - 1 ) {
-				helper.insert( title.getText().toString(), description.getText().toString(), parentId );
+			if ( editToDo.getId() == - 1 ) {
+				helper.insert( title.getText().toString(), description.getText().toString(), editToDo.getParentId() );
 			} else {
-				helper.update( id, title.getText().toString(), description.getText().toString(), parentId );
+				helper.update( editToDo.getId(), title.getText().toString(), description.getText().toString(), editToDo.getParentId() );
 			}
 		}
 		finish();
