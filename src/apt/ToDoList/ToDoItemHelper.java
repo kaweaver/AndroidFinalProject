@@ -3,9 +3,9 @@ package apt.ToDoList;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.*;
-import android.util.Log;
 
 class ToDoItemHelper extends SQLiteOpenHelper {
+	
 	private static final String DATABASE_NAME = "todolist.db";
 	private static final int SCHEMA_VERSION = 1;
 

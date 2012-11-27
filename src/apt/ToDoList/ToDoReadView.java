@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -18,9 +17,10 @@ public class ToDoReadView extends ListActivity {
 	TextView description = null;
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
-	static ToDoItem cut_todo = null;
-	int id = 1;
-	int parentId = - 1;
+	// static ToDoItem cut_todo = null;
+	int todoId = - 1;
+	int todoParentId = - 1;
+	static int cutId = - 1;
 
 	public final static String ID_EXTRA = "apt.ToDoList._id";
 	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
@@ -32,8 +32,8 @@ public class ToDoReadView extends ListActivity {
 		helper = new ToDoItemHelper( this );
 		title = ( TextView ) findViewById( R.id.currenttitle );
 		description = ( TextView ) findViewById( R.id.currentdescription );
-		parentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
-		id = getIntent().getIntExtra( ID_EXTRA, 1 );
+		todoParentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
+		todoId = getIntent().getIntExtra( ID_EXTRA, 1 );
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ToDoReadView extends ListActivity {
 	public void onListItemClick( ListView list, View view, int position, long id ) {
 		Intent i = new Intent( ToDoReadView.this, ToDoReadView.class );
 		i.putExtra( ID_EXTRA, ( int ) id );
-		i.putExtra( PARENT_ID_EXTRA, this.id );
+		i.putExtra( PARENT_ID_EXTRA, this.todoId );
 		startActivity( i );
 	}
 
@@ -54,8 +54,6 @@ public class ToDoReadView extends ListActivity {
 	public void onResume() {
 		super.onResume();
 		initList();
-		// Log.d( "parentId", Integer.toString( parentId ) + " " +
-		// title.getText().toString() );
 
 	}
 
@@ -67,30 +65,30 @@ public class ToDoReadView extends ListActivity {
 		 */
 		menu.clear();
 		new MenuInflater( this ).inflate( R.menu.option, menu );
-		if ( id == 1 ) {
+		if ( todoId == 1 ) {
 			menu.getItem( 2 ).setEnabled( false );
 			menu.getItem( 2 ).setVisible( false );
 
 			menu.getItem( 3 ).setEnabled( false );
 			menu.getItem( 3 ).setVisible( false );
 
-			if ( ToDoReadView.cut_todo == null ) {
+			if ( cutId == - 1 ) {
 				menu.getItem( 4 ).setEnabled( false );
 				menu.getItem( 4 ).setVisible( false );
 			}
 		}
 
-		if ( ToDoReadView.cut_todo != null ) {
+		if ( cutId != - 1 ) {
 			menu.getItem( 4 ).setTitle( "Cancel Cut" );
 
-			if ( ! isDescendant( ToDoReadView.cut_todo.getId(), this.id ) ) {
+			if ( ! isDescendant( cutId, this.todoId ) ) {
 				menu.getItem( 5 ).setEnabled( true );
 				menu.getItem( 5 ).setVisible( true );
 			} else {
 				menu.getItem( 5 ).setEnabled( false );
 				menu.getItem( 5 ).setVisible( false );
 			}
-			
+
 		} else {
 			menu.getItem( 5 ).setEnabled( false );
 			menu.getItem( 5 ).setVisible( false );
@@ -102,13 +100,13 @@ public class ToDoReadView extends ListActivity {
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		if ( item.getItemId() == R.id.add ) {
 			Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
-			i.putExtra( PARENT_ID_EXTRA, id );
+			i.putExtra( PARENT_ID_EXTRA, todoId );
 			startActivity( i );
 			return true;
 		} else if ( item.getItemId() == R.id.edit ) {
 			Intent i = new Intent( ToDoReadView.this, ToDoEditView.class );
-			i.putExtra( ID_EXTRA, this.id );
-			i.putExtra( PARENT_ID_EXTRA, this.parentId );
+			i.putExtra( ID_EXTRA, this.todoId );
+			i.putExtra( PARENT_ID_EXTRA, this.todoParentId );
 			startActivity( i );
 			return true;
 		} else if ( item.getItemId() == R.id.delete_branch ) {
@@ -116,10 +114,10 @@ public class ToDoReadView extends ListActivity {
 		} else if ( item.getItemId() == R.id.delete_single ) {
 			deleteItem();
 		} else if ( item.getItemId() == R.id.cut_item ) {
-			if ( ToDoReadView.cut_todo == null ) {
-				ToDoReadView.cut_todo = new ToDoItem( id, parentId );
+			if ( cutId == - 1 ) {
+				cutId = todoId;
 			} else {
-				ToDoReadView.cut_todo = null;
+				cutId = - 1;
 			}
 			invalidateOptionsMenu();
 		} else if ( item.getItemId() == R.id.paste_item ) {
@@ -134,22 +132,22 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( current );
 			current.close();
 		}
-		current = helper.getById( ToDoReadView.cut_todo.getId() );
+		current = helper.getById( cutId );
 		startManagingCursor( current );
 		current.moveToFirst();
-		helper.update( ToDoReadView.cut_todo.getId(), helper.getTitle( current ), helper.getDescription( current ), id );
+		helper.update( cutId, helper.getTitle( current ), helper.getDescription( current ), todoId );
 
-		ToDoReadView.cut_todo = null;
+		cutId = - 1;
 
 		initList();
 	}
 
 	/**
-	 * This will tell if question_id is an ancestor of this.id
+	 * This will tell if question_id is an ancestor of this.todoId
 	 * 
 	 * @param question_id
 	 *          the id in question ancestor the ancestor id
-	 * @return true if question_id is an ancestor of this.id false otherwise
+	 * @return true if question_id is an ancestor of this.todoId false otherwise
 	 */
 	private boolean isDescendant( int ancestor, int question_id ) {
 		if ( question_id <= 1 ) {
@@ -170,7 +168,7 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	private void deleteBranch() {
-		deleteAllChildren( id );
+		deleteAllChildren( todoId );
 		finish();
 	}
 
@@ -185,8 +183,8 @@ public class ToDoReadView extends ListActivity {
 	}
 
 	private void deleteItem() {
-		reassignParents( parentId, id );
-		helper.delete( id );
+		reassignParents( todoParentId, todoId );
+		helper.delete( todoId );
 		finish();
 	}
 
@@ -204,7 +202,7 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( current );
 			current.close();
 		}
-		current = helper.getById( id );
+		current = helper.getById( todoId );
 		startManagingCursor( current );
 		current.moveToFirst();
 		title.setText( helper.getTitle( current ) );
@@ -214,7 +212,7 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( todo );
 			todo.close();
 		}
-		todo = helper.getAllbyParent( id );
+		todo = helper.getAllbyParent( todoId );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );
