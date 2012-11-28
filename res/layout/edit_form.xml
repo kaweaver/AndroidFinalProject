@@ -29,6 +29,17 @@
 
                 <EditText android:id="@+id/description" />
             </TableRow>
+
+            <TableRow>
+
+                <TextView android:text="Picture" />
+
+                <ImageView android:id="@+id/picture" />
+
+                <Button android:id="@+id/picture_button"
+                    android:text="Take Picture" />                
+                    <!-- TODO change to picture -->
+            </TableRow>
         </TableLayout>
     </ScrollView>
 

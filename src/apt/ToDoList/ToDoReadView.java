@@ -1,5 +1,6 @@
 package apt.ToDoList;
 
+import android.net.Uri;
 import apt.ToDoList.R;
 import android.app.ListActivity;
 import android.content.Context;
@@ -15,9 +16,10 @@ public class ToDoReadView extends ListActivity {
 	Cursor current = null;
 	TextView title = null;
 	TextView description = null;
+	ImageView picture = null;
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
-	// static ToDoItem cut_todo = null;
+	String pictureUri = null;
 	int todoId = - 1;
 	int todoParentId = - 1;
 	static int cutId = - 1;
@@ -32,6 +34,7 @@ public class ToDoReadView extends ListActivity {
 		helper = new ToDoItemHelper( this );
 		title = ( TextView ) findViewById( R.id.currenttitle );
 		description = ( TextView ) findViewById( R.id.currentdescription );
+		picture = ( ImageView ) findViewById( R.id.currentpicture );
 		todoParentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
 		todoId = getIntent().getIntExtra( ID_EXTRA, 1 );
 	}
@@ -54,7 +57,6 @@ public class ToDoReadView extends ListActivity {
 	public void onResume() {
 		super.onResume();
 		initList();
-
 	}
 
 	@Override
@@ -207,6 +209,15 @@ public class ToDoReadView extends ListActivity {
 		current.moveToFirst();
 		title.setText( helper.getTitle( current ) );
 		description.setText( helper.getDescription( current ) );
+		pictureUri = helper.getPictureUri( current );
+		if(pictureUri != null){
+			picture.setImageURI( Uri.parse(pictureUri) );
+			picture.setEnabled( true );
+			picture.setVisibility( ImageView.VISIBLE );
+		} else {
+			picture.setEnabled( false );
+			picture.setVisibility( ImageView.INVISIBLE );
+		}
 
 		if ( todo != null ) {
 			stopManagingCursor( todo );

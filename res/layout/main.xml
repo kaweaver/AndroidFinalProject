@@ -14,7 +14,12 @@
         android:id="@+id/currentdescription"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-    
+
+    <ImageView
+        android:id="@+id/currentpicture"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
