@@ -135,7 +135,7 @@ public class ToDoReadView extends ListActivity {
 		current = helper.getById( cutId );
 		startManagingCursor( current );
 		current.moveToFirst();
-		helper.update( cutId, helper.getTitle( current ), helper.getDescription( current ), todoId );
+		helper.updateParent( cutId, todoId );
 
 		cutId = - 1;
 
@@ -192,7 +192,7 @@ public class ToDoReadView extends ListActivity {
 		Cursor c = helper.getAllbyParent( id );
 		c.moveToFirst();
 		for ( int i = 0; i < c.getCount(); i ++ ) {
-			helper.update( helper.getId( c ), helper.getTitle( c ), helper.getDescription( c ), parentId );
+			helper.updateParent( helper.getId( c ), parentId );
 			c.moveToNext();
 		}
 	}
