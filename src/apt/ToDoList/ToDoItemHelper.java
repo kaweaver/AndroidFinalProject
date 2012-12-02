@@ -51,7 +51,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getAllbyParent( int parentId ) {
-		String sqlStatement = "SELECT _id, title, description FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + ";";
+		String sqlStatement = "SELECT _id, title, description, pictureuri FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + ";";
 		return getReadableDatabase().rawQuery( sqlStatement, null );
 	}
 
@@ -62,7 +62,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 
 	public Cursor getById( int id ) {
 		String[] args = { Integer.toString( id ) };
-		String sqlStatement = "SELECT _id, title, description, parent FROM " + TABLE_NAME + " WHERE _id=?";
+		String sqlStatement = "SELECT _id, title, description, parent, pictureuri FROM " + TABLE_NAME + " WHERE _id=?";
 		return getReadableDatabase().rawQuery( sqlStatement, args );
 	}
 

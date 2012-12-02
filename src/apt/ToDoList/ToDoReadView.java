@@ -1,11 +1,13 @@
 package apt.ToDoList;
 
+import java.io.File;
 import android.net.Uri;
-import apt.ToDoList.R;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -211,7 +213,9 @@ public class ToDoReadView extends ListActivity {
 		description.setText( helper.getDescription( current ) );
 		pictureUri = helper.getPictureUri( current );
 		if(pictureUri != null){
-			picture.setImageURI( Uri.parse(pictureUri) );
+			Bitmap myBitmap = BitmapFactory.decodeFile((new File(pictureUri)).getAbsolutePath());
+			//TODO: more elegant resizing
+	    picture.setImageBitmap(Bitmap.createScaledBitmap(myBitmap, 360, 360, false));
 			picture.setEnabled( true );
 			picture.setVisibility( ImageView.VISIBLE );
 		} else {

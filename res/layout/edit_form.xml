@@ -32,13 +32,32 @@
 
             <TableRow>
 
-                <TextView android:text="Picture" />
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent" >
 
-                <ImageView android:id="@+id/picture" />
+                    <TextView
+                        android:id="@+id/picture_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" 
+                        android:layout_alignParentLeft="true"
+                        android:text="Picture" />
 
-                <Button android:id="@+id/picture_button"
-                    android:text="Take Picture" />                
-                    <!-- TODO change to picture -->
+                    <Button
+                        android:id="@+id/picture_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" 
+                        android:layout_below="@id/picture_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="Take Picture" />
+
+                    <ImageView
+                        android:id="@+id/picture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" 
+                        android:layout_toRightOf="@id/picture_button"
+                        android:layout_alignParentRight="true"/>
+                </RelativeLayout>
             </TableRow>
         </TableLayout>
     </ScrollView>

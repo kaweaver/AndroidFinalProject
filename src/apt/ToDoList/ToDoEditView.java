@@ -3,10 +3,13 @@ package apt.ToDoList;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import apt.ToDoList.R;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,7 +41,6 @@ public class ToDoEditView extends Activity {
 	ToDoItemHelper helper = null;
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
-	public static final int MEDIA_TYPE_VIDEO = 2;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
 	@Override
@@ -56,10 +58,6 @@ public class ToDoEditView extends Activity {
 		description = ( EditText ) findViewById( R.id.description );
 		picture = ( ImageView ) findViewById( R.id.picture );
 
-		if ( todoId != - 1 ) {
-			load();
-		}
-
 		save_button = ( Button ) findViewById( R.id.save_button );
 		save_button.setOnClickListener( new OnClickListener() {
 			public void onClick( View view ) {
@@ -73,6 +71,16 @@ public class ToDoEditView extends Activity {
 				takePicture();
 			}
 		} );
+
+	}
+
+	@Override
+	public void onResume() {
+
+		if ( todoId != - 1 ) {
+			load();
+		}
+		super.onResume();
 
 	}
 
@@ -94,7 +102,8 @@ public class ToDoEditView extends Activity {
 		description.setText( helper.getDescription( c ) );
 		pictureUri = helper.getPictureUri( c );
 		if ( pictureUri != null ) {
-			picture.setImageURI( Uri.parse( pictureUri ) );
+			Bitmap myBitmap = BitmapFactory.decodeFile((new File(pictureUri)).getAbsolutePath());
+	    picture.setImageBitmap(Bitmap.createScaledBitmap(myBitmap, 120, 120, false));
 			picture.setEnabled( true );
 			picture.setVisibility( ImageView.VISIBLE );
 		} else {
@@ -124,11 +133,12 @@ public class ToDoEditView extends Activity {
 				Log.d( "MyCameraApp", "null file name" );
 				return;
 			}
-			fileUri = Uri.fromFile( getOutputMediaFile( MEDIA_TYPE_IMAGE ) );
+			fileUri = Uri.fromFile( file );
 		} else {
 			fileUri = Uri.parse( pictureUri );
 		}
 		intent.putExtra( MediaStore.EXTRA_OUTPUT, fileUri );
+		pictureUri = fileUri.getPath();
 		startActivityForResult( intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE );
 	}
 
@@ -138,7 +148,8 @@ public class ToDoEditView extends Activity {
 			if ( resultCode == RESULT_OK ) {
 				// Image captured and saved to fileUri specified in the Intent
 				if ( pictureUri != null ) {
-					picture.setImageURI( Uri.parse( pictureUri ) );
+					Bitmap myBitmap = BitmapFactory.decodeFile((new File(pictureUri)).getAbsolutePath());
+			    picture.setImageBitmap(Bitmap.createScaledBitmap(myBitmap, 120, 120, false));
 					picture.setEnabled( true );
 					picture.setVisibility( ImageView.VISIBLE );
 				}
@@ -151,20 +162,24 @@ public class ToDoEditView extends Activity {
 		}
 	}
 
-	private static File getOutputMediaFile( int type ) {
+	private File getOutputMediaFile( int type ) {
+		File mediaStorageDir = null;
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
+		if ( Environment.getExternalStorageState().equals( Environment.MEDIA_MOUNTED ) ) {
+			mediaStorageDir = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ), "MyCameraApp" );
+			// This location works best if you want the created images to be shared
+			// between applications and persist after your app has been uninstalled.
 
-		File mediaStorageDir = new File( Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ), "MyCameraApp" );
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if ( ! mediaStorageDir.exists() ) {
-			if ( ! mediaStorageDir.mkdirs() ) {
-				Log.d( "MyCameraApp", "failed to create directory" );
-				return null;
+			// Create the storage directory if it does not exist
+			if ( ! mediaStorageDir.exists() ) {
+				if ( ! mediaStorageDir.mkdirs() ) {
+					Log.d( "MyCameraApp", "failed to create external directory" );
+					return null;
+				}
 			}
+		} else {
+			mediaStorageDir = this.getDir( "MyCameraApp", Context.MODE_PRIVATE );
 		}
 
 		// Create a media file name
@@ -172,8 +187,6 @@ public class ToDoEditView extends Activity {
 		File mediaFile;
 		if ( type == MEDIA_TYPE_IMAGE ) {
 			mediaFile = new File( mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg" );
-		} else if ( type == MEDIA_TYPE_VIDEO ) {
-			mediaFile = new File( mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4" );
 		} else {
 			return null;
 		}
