@@ -1,6 +1,7 @@
 package apt.ToDoList;
 
 import java.io.File;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.app.ListActivity;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 public class ToDoReadView extends ListActivity {
@@ -19,13 +21,17 @@ public class ToDoReadView extends ListActivity {
 	TextView title = null;
 	TextView description = null;
 	ImageView picture = null;
+	Button play_audio = null;
+	
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
 	String pictureUri = null;
+	String audioUri = null;
 	int todoId = - 1;
 	int todoParentId = - 1;
 	static int cutId = - 1;
 
+	MediaPlayer player = null;
 	public final static String ID_EXTRA = "apt.ToDoList._id";
 	public final static String PARENT_ID_EXTRA = "apt.ToDoList.parent_id";
 
@@ -39,6 +45,13 @@ public class ToDoReadView extends ListActivity {
 		picture = ( ImageView ) findViewById( R.id.currentpicture );
 		todoParentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
 		todoId = getIntent().getIntExtra( ID_EXTRA, 1 );
+		
+		play_audio = ( Button ) findViewById( R.id.play_audio );
+		play_audio.setOnClickListener( new OnClickListener() {
+			public void onClick( View view ) {
+				playAudio();
+			}
+		} );
 	}
 
 	@Override
@@ -130,6 +143,11 @@ public class ToDoReadView extends ListActivity {
 		}
 		return super.onOptionsItemSelected( item );
 	}
+	
+	private void playAudio(){
+		player = MediaPlayer.create( this, Uri.parse( audioUri ) );
+		player.start();
+	}
 
 	private void pasteItem() {
 		if ( current != null ) {
@@ -212,6 +230,7 @@ public class ToDoReadView extends ListActivity {
 		title.setText( helper.getTitle( current ) );
 		description.setText( helper.getDescription( current ) );
 		pictureUri = helper.getPictureUri( current );
+		audioUri = helper.getAudioUri( current );
 		if(pictureUri != null){
 			Bitmap myBitmap = BitmapFactory.decodeFile((new File(pictureUri)).getAbsolutePath());
 			//TODO: more elegant resizing
@@ -221,6 +240,13 @@ public class ToDoReadView extends ListActivity {
 		} else {
 			picture.setEnabled( false );
 			picture.setVisibility( ImageView.INVISIBLE );
+		}
+		if(audioUri != null) {
+			play_audio.setEnabled( true );
+			play_audio.setVisibility( ImageView.VISIBLE );
+		}else {
+			play_audio.setEnabled( false );
+			play_audio.setVisibility( ImageView.INVISIBLE );
 		}
 
 		if ( todo != null ) {

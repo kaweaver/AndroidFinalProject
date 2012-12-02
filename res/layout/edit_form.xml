@@ -39,25 +39,40 @@
                     <TextView
                         android:id="@+id/picture_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" 
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="Picture" />
 
                     <Button
                         android:id="@+id/picture_button"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" 
-                        android:layout_below="@id/picture_text"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_below="@id/picture_text"
                         android:text="Take Picture" />
 
                     <ImageView
                         android:id="@+id/picture"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" 
-                        android:layout_toRightOf="@id/picture_button"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@id/picture_button" />
                 </RelativeLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/record_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Record audio" />
+
+                <Button
+                    android:id="@+id/play_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Play audio" />
             </TableRow>
         </TableLayout>
     </ScrollView>
