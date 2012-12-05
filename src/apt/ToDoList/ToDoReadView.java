@@ -260,7 +260,7 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( todo );
 			todo.close();
 		}
-		todo = helper.getAllbyParentOrdered( todoId, "title ASC" );
+		todo = helper.getAllbyParentOrdered( todoId, prefs.getString( "sort_order", "title" ) );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );
