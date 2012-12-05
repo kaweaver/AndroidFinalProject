@@ -40,16 +40,19 @@ public class ToDoEditView extends Activity {
 	ImageView picture = null;
 	Button save_button = null;
 	Button picture_button = null;
+	
+	//variables needed for the picture and audio addition to todo items
 	Button record_audio = null;
 	Button play_audio = null;
-
 	String pictureUri = null;
 	String audioUri = null;
 	Boolean recordingAudio = false;
+	
 	int todoId = - 1;
 	int todoParentId = - 1;
 	ToDoItemHelper helper = null;
-
+	
+	//needed to record and play back audio files for todo items
 	MediaRecorder recorder = null;
 	MediaPlayer player = null;
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -129,10 +132,19 @@ public class ToDoEditView extends Activity {
 	private void load() {
 		Cursor c = helper.getById( todoId );
 		c.moveToFirst();
+		
 		title.setText( helper.getTitle( c ) );
 		description.setText( helper.getDescription( c ) );
+		
 		pictureUri = helper.getPictureUri( c );
 		audioUri = helper.getAudioUri( c );
+		
+		setPictureButton();
+		setAudioPlayButton();
+		c.close();
+	}
+	
+	private void setPictureButton(){
 		if ( pictureUri != null ) {
 			Bitmap myBitmap = BitmapFactory.decodeFile( ( new File( pictureUri ) ).getAbsolutePath() );
 			picture.setImageBitmap( Bitmap.createScaledBitmap( myBitmap, 120, 120, false ) );
@@ -142,8 +154,6 @@ public class ToDoEditView extends Activity {
 			picture.setEnabled( false );
 			picture.setVisibility( ImageView.INVISIBLE );
 		}
-		setAudioPlayButton();
-		c.close();
 	}
 	
 	private void setAudioPlayButton(){
