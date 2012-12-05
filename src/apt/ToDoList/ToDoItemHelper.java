@@ -55,17 +55,20 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 
 	public Cursor getAllbyParent( int parentId ) {
 		String sqlStatement = "SELECT * FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + ";";
+		
 		return getReadableDatabase().rawQuery( sqlStatement, null );
 	}
 
 	public Cursor getAll() {
 		String sqlStatement = "SELECT * from " + TABLE_NAME + ";";
+		
 		return getReadableDatabase().rawQuery( sqlStatement, null );
 	}
 
 	public Cursor getById( int id ) {
 		String[] args = { Integer.toString( id ) };
 		String sqlStatement = "SELECT * FROM " + TABLE_NAME + " WHERE _id=?";
+		
 		return getReadableDatabase().rawQuery( sqlStatement, args );
 	}
 
@@ -104,21 +107,19 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		cv.put( "audiouri", audioUri );
 
 		getWritableDatabase().update( TABLE_NAME, cv, "_id=?", args );
-
 	}
 	
 	public void updateParent( int id, int parentId){
 		ContentValues cv = new ContentValues();
 		String[] args = { Integer.toString( id ) };
 		cv.put( "parent", parentId );
-
+		
 		getWritableDatabase().update( TABLE_NAME, cv, "_id=?", args );
 	}
 
 	public void delete( int id ) {
 		String[] args = { Integer.toString( id ) };
+		
 		getWritableDatabase().delete( TABLE_NAME, "_id=?", args );
-
 	}
-
 }
