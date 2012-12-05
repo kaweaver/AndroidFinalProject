@@ -1,0 +1,11 @@
+
+    <resources>
+        <string-array name="sort_names">
+            <item >title_ascending</item>
+            <item >title_descending</item>
+        </string-array>
+        <string-array name="sort_clauses">
+            <item >title ASC</item>
+            <item >name DESC</item>
+        </string-array>
+    </resources>
