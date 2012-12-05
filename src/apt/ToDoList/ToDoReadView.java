@@ -3,7 +3,6 @@ package apt.ToDoList;
 import java.io.File;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -119,7 +118,6 @@ public class ToDoReadView extends ListActivity {
 		return super.onPrepareOptionsMenu( menu );
 	}
 
-	@SuppressLint({ "NewApi", "NewApi" })
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		if ( item.getItemId() == R.id.add ) {
@@ -262,7 +260,7 @@ public class ToDoReadView extends ListActivity {
 			stopManagingCursor( todo );
 			todo.close();
 		}
-		todo = helper.getAllbyParent( todoId );
+		todo = helper.getAllbyParentOrdered( todoId, "title ASC" );
 		startManagingCursor( todo );
 		adapter = new ToDoAdapter( todo );
 		setListAdapter( adapter );
