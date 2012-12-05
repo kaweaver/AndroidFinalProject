@@ -19,5 +19,6 @@
     <item
         android:id="@+id/paste_item"
         android:title="Paste Item"/>
+    <item android:id="@+id/prefs" android:title="Settings"></item>
 
 </menu>

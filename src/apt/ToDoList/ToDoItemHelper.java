@@ -3,6 +3,7 @@ package apt.ToDoList;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.*;
+import android.util.Log;
 
 class ToDoItemHelper extends SQLiteOpenHelper {
 	
@@ -53,6 +54,14 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		getWritableDatabase().insert( TABLE_NAME, "table", cv );
 	}
 
+	public Cursor getAllbyParentOrdered( int parentId , String orderBy) {
+		Log.d("ORDER", orderBy);
+		String sqlStatement = "SELECT * FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + 
+				" ORDER BY " + orderBy + ";";
+		
+		return getReadableDatabase().rawQuery( sqlStatement, null );
+	}
+	
 	public Cursor getAllbyParent( int parentId ) {
 		String sqlStatement = "SELECT * FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + ";";
 		

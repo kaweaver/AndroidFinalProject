@@ -3,6 +3,7 @@ package apt.ToDoList;
 import java.io.File;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class ToDoReadView extends ListActivity {
 
@@ -22,6 +25,7 @@ public class ToDoReadView extends ListActivity {
 	TextView description = null;
 	ImageView picture = null;
 	Button play_audio = null;
+	SharedPreferences prefs = null;
 	
 	ToDoAdapter adapter = null;
 	ToDoItemHelper helper = null;
@@ -45,6 +49,8 @@ public class ToDoReadView extends ListActivity {
 		picture = ( ImageView ) findViewById( R.id.currentpicture );
 		todoParentId = getIntent().getIntExtra( PARENT_ID_EXTRA, - 1 );
 		todoId = getIntent().getIntExtra( ID_EXTRA, 1 );
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(prefListener);
 		
 		play_audio = ( Button ) findViewById( R.id.play_audio );
 		play_audio.setOnClickListener( new OnClickListener() {
@@ -113,6 +119,7 @@ public class ToDoReadView extends ListActivity {
 		return super.onPrepareOptionsMenu( menu );
 	}
 
+	@SuppressLint({ "NewApi", "NewApi" })
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		if ( item.getItemId() == R.id.add ) {
@@ -140,6 +147,8 @@ public class ToDoReadView extends ListActivity {
 		} else if ( item.getItemId() == R.id.paste_item ) {
 			pasteItem();
 			invalidateOptionsMenu();
+		} else if ( item.getItemId() == R.id.prefs ) {
+			startActivity(new Intent(this, EditPreferences.class));
 		}
 		return super.onOptionsItemSelected( item );
 	}
@@ -298,5 +307,12 @@ public class ToDoReadView extends ListActivity {
 		}
 
 	}
+	private SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
+			if (key.equals("sort_order")) {
+				initList();
+			}
+		}
+	};
 
 }
