@@ -4,7 +4,20 @@
     <item
         android:id="@+id/add"
         android:title="Add"/>
-    <item android:id="@+id/edit" android:title="Edit"></item>
-    <item android:id="@+id/delete" android:title="Delete"></item>
+    <item
+        android:id="@+id/edit"
+        android:title="Edit"/>
+    <item
+        android:id="@+id/delete_branch"
+        android:title="Delete Branch"/>
+    <item
+        android:id="@+id/delete_single"
+        android:title="Delete Item"/>
+    <item
+        android:id="@+id/cut_item"
+        android:title="Cut Item"/>
+    <item
+        android:id="@+id/paste_item"
+        android:title="Paste Item"/>
 
 </menu>
