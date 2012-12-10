@@ -3,9 +3,13 @@
         <string-array name="sort_names">
             <item >title_ascending</item>
             <item >title_descending</item>
+            <item >priority_ascending</item>
+            <item >priority_descending</item>
         </string-array>
         <string-array name="sort_clauses">
             <item >title ASC</item>
             <item >title DESC</item>
+            <item >priority ASC</item>
+            <item >priority DESC</item>
         </string-array>
     </resources>

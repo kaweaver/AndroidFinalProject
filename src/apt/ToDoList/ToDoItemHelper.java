@@ -12,7 +12,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_NAME = "todos";
 	private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + DATABASE_NAME + ";";
-	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, parent INTEGER, pictureuri TEXT, audiouri TEXT, priority INTEGER);";
+	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, parent INTEGER, pictureuri TEXT, audiouri TEXT, priority INTEGER default 1);";
 	private static final String INITIAL_ITEM = "INSERT INTO " + TABLE_NAME + " (_id,title) VALUES (1,\"This Is My List\");";
 	private String alterPicture = "ALTER TABLE "+TABLE_NAME+" ADD COLUMN pictureuri TEXT";
 	private String alterAudio = "ALTER TABLE "+TABLE_NAME+" ADD COLUMN audiouri TEXT";
@@ -109,6 +109,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	}
 	
 	public int getPriority( Cursor c ){
+		Log.d("getInt 6", "" + c.getInt( 6 ));
 		return c.getInt( 6 );
 	}
 

@@ -294,15 +294,19 @@ public class ToDoReadView extends ListActivity {
 
 		private TextView title = null;
 		private TextView description = null;
+		private TextView priority = null;
 
 		ToDoHolder( View row ) {
 			title = ( TextView ) row.findViewById( R.id.title );
 			description = ( TextView ) row.findViewById( R.id.description );
+			priority = ( TextView ) row.findViewById( R.id.priority );
 		}
 
 		void populateForm( Cursor c, ToDoItemHelper helper ) {
 			title.setText( helper.getTitle( c ) );
 			description.setText( helper.getDescription( c ) );
+			Log.d("read view priority", Integer.toString(helper.getPriority(c)));
+			priority.setText( Integer.toString(helper.getPriority(c) - 2131230731) );
 		}
 
 	}
