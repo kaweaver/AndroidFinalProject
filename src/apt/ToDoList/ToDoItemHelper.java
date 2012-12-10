@@ -109,7 +109,6 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	}
 	
 	public int getPriority( Cursor c ){
-		Log.d("getInt 6", "" + c.getInt( 6 ));
 		return c.getInt( 6 );
 	}
 

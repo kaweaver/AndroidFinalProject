@@ -172,7 +172,6 @@ public class ToDoEditView extends Activity {
 
 	private void save() {
 		if ( title.getText().toString().length() > 0 ) {
-			Log.d("IN THE SAVE FUNCTION", Integer.toString(priority.getCheckedRadioButtonId()));
 			if ( todoId == - 1 ) {
 				helper.insert( title.getText().toString(), description.getText().toString(), todoParentId, pictureUri, audioUri, priority.getCheckedRadioButtonId() );
 			} else {
