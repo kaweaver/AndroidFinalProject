@@ -40,6 +40,7 @@ public class ToDoEditView extends Activity {
 	ImageView picture = null;
 	Button save_button = null;
 	Button picture_button = null;
+	RadioGroup priority = null;
 	
 	//variables needed for the picture and audio addition to todo items
 	Button record_audio = null;
@@ -72,6 +73,7 @@ public class ToDoEditView extends Activity {
 		title = ( EditText ) findViewById( R.id.title );
 		description = ( EditText ) findViewById( R.id.description );
 		picture = ( ImageView ) findViewById( R.id.picture );
+		priority = ( RadioGroup ) findViewById( R.id.priority_group );
 
 		recorder = new MediaRecorder();
 
@@ -136,6 +138,8 @@ public class ToDoEditView extends Activity {
 		title.setText( helper.getTitle( c ) );
 		description.setText( helper.getDescription( c ) );
 		
+		priority.check(helper.getPriority( c ));
+		
 		pictureUri = helper.getPictureUri( c );
 		audioUri = helper.getAudioUri( c );
 		
@@ -149,29 +153,29 @@ public class ToDoEditView extends Activity {
 			Bitmap myBitmap = BitmapFactory.decodeFile( ( new File( pictureUri ) ).getAbsolutePath() );
 			picture.setImageBitmap( Bitmap.createScaledBitmap( myBitmap, 120, 120, false ) );
 			picture.setEnabled( true );
-			picture.setVisibility( ImageView.VISIBLE );
+			picture.setVisibility( View.VISIBLE );
 		} else {
 			picture.setEnabled( false );
-			picture.setVisibility( ImageView.INVISIBLE );
+			picture.setVisibility( View.INVISIBLE );
 		}
 	}
 	
 	private void setAudioPlayButton(){
 		if ( audioUri != null ) {
 			play_audio.setEnabled( true );
-			play_audio.setVisibility( ImageView.VISIBLE );
+			play_audio.setVisibility( View.VISIBLE );
 		} else {
 			play_audio.setEnabled( false );
-			play_audio.setVisibility( ImageView.INVISIBLE );
+			play_audio.setVisibility( View.INVISIBLE );
 		}
 	}
 
 	private void save() {
 		if ( title.getText().toString().length() > 0 ) {
 			if ( todoId == - 1 ) {
-				helper.insert( title.getText().toString(), description.getText().toString(), todoParentId, pictureUri, audioUri );
+				helper.insert( title.getText().toString(), description.getText().toString(), todoParentId, pictureUri, audioUri, priority.getCheckedRadioButtonId() );
 			} else {
-				helper.update( todoId, title.getText().toString(), description.getText().toString(), todoParentId, pictureUri, audioUri );
+				helper.update( todoId, title.getText().toString(), description.getText().toString(), todoParentId, pictureUri, audioUri, priority.getCheckedRadioButtonId() );
 			}
 		}
 		finish();
@@ -235,13 +239,13 @@ public class ToDoEditView extends Activity {
 					Bitmap myBitmap = BitmapFactory.decodeFile( ( new File( pictureUri ) ).getAbsolutePath() );
 					picture.setImageBitmap( Bitmap.createScaledBitmap( myBitmap, 120, 120, false ) );
 					picture.setEnabled( true );
-					picture.setVisibility( ImageView.VISIBLE );
+					picture.setVisibility( View.VISIBLE );
 				}
 			} else {
 				// Image capture failed, advise user
 				pictureUri = null;
 				picture.setEnabled( false );
-				picture.setVisibility( ImageView.INVISIBLE );
+				picture.setVisibility( View.INVISIBLE );
 			}
 		}
 	}

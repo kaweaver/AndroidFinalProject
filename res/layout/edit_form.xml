@@ -74,6 +74,41 @@
                     android:layout_height="wrap_content"
                     android:text="Play audio" />
             </TableRow>
+            <TableRow>
+				<TextView
+                        android:id="@+id/priority_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Priority" />
+				<RadioGroup
+			        android:id="@+id/priority_group"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@+id/scrollView1"
+			        android:orientation="horizontal" >
+			
+			        <RadioButton
+			            android:id="@+id/priority1"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:checked="true"
+			            android:text="1" />
+			
+			        <RadioButton
+			            android:id="@+id/priority2"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="2" />
+			
+			        <RadioButton
+			            android:id="@+id/priority3"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="3" />
+			    </RadioGroup>
+               
+            </TableRow>
         </TableLayout>
     </ScrollView>
 

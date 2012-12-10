@@ -8,14 +8,15 @@ import android.util.Log;
 class ToDoItemHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "todolist.db";
-	private static final int SCHEMA_VERSION = 3;
+	private static final int SCHEMA_VERSION = 4;
 
 	private static final String TABLE_NAME = "todos";
 	private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + DATABASE_NAME + ";";
-	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, parent INTEGER, pictureuri TEXT, audiouri TEXT);";
+	private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, parent INTEGER, pictureuri TEXT, audiouri TEXT, priority INTEGER);";
 	private static final String INITIAL_ITEM = "INSERT INTO " + TABLE_NAME + " (_id,title) VALUES (1,\"This Is My List\");";
 	private String alterPicture = "ALTER TABLE "+TABLE_NAME+" ADD COLUMN pictureuri TEXT";
 	private String alterAudio = "ALTER TABLE "+TABLE_NAME+" ADD COLUMN audiouri TEXT";
+	private String alterpriority = "ALTER TABLE "+TABLE_NAME+" ADD COLUMN priority INTEGER";
 
 	public ToDoItemHelper( Context context ) {
 		super( context, DATABASE_NAME, null, SCHEMA_VERSION );
@@ -36,13 +37,15 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 			db.execSQL( alterPicture );
 		case 2 :
 			db.execSQL( alterAudio );
+		case 3 :
+			db.execSQL(alterpriority);
 		default :
 			// do nothing
 			break;
 		}
 	}
 
-	public void insert( String title, String description, int parentId, String pictureUri, String audioUri ) {
+	public void insert( String title, String description, int parentId, String pictureUri, String audioUri, int priority ) {
 		ContentValues cv = new ContentValues();
 
 		cv.put( "title", title );
@@ -50,12 +53,12 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		cv.put( "parent", parentId );
 		cv.put( "pictureuri", pictureUri );
 		cv.put( "audiouri", audioUri );
+		cv.put("priority", priority);
 
 		getWritableDatabase().insert( TABLE_NAME, "table", cv );
 	}
 
 	public Cursor getAllbyParentOrdered( int parentId , String orderBy) {
-		Log.d("ORDER", orderBy);
 		String sqlStatement = "SELECT * FROM " + TABLE_NAME + " WHERE parent = " + Integer.toString( parentId ) + 
 				" ORDER BY " + orderBy + ";";
 		
@@ -104,8 +107,12 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 	public String getAudioUri( Cursor c ) {
 		return c.getString( 5 );
 	}
+	
+	public int getPriority( Cursor c ){
+		return c.getInt( 6 );
+	}
 
-	public void update( int id, String title, String description, int parentId, String pictureUri, String audioUri ) {
+	public void update( int id, String title, String description, int parentId, String pictureUri, String audioUri, int priority ) {
 		ContentValues cv = new ContentValues();
 		String[] args = { Integer.toString( id ) };
 
@@ -114,6 +121,7 @@ class ToDoItemHelper extends SQLiteOpenHelper {
 		cv.put( "parent", parentId );
 		cv.put( "pictureuri", pictureUri);
 		cv.put( "audiouri", audioUri );
+		cv.put("priority", priority);
 
 		getWritableDatabase().update( TABLE_NAME, cv, "_id=?", args );
 	}

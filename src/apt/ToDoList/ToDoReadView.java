@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -241,19 +242,19 @@ public class ToDoReadView extends ListActivity {
 		if(pictureUri != null){
 			Bitmap myBitmap = BitmapFactory.decodeFile((new File(pictureUri)).getAbsolutePath());
 			//TODO: more elegant resizing
-	    picture.setImageBitmap(Bitmap.createScaledBitmap(myBitmap, 360, 360, false));
+			picture.setImageBitmap(Bitmap.createScaledBitmap(myBitmap, 360, 360, false));
 			picture.setEnabled( true );
-			picture.setVisibility( ImageView.VISIBLE );
+			picture.setVisibility( View.VISIBLE );
 		} else {
 			picture.setEnabled( false );
-			picture.setVisibility( ImageView.INVISIBLE );
+			picture.setVisibility( View.INVISIBLE );
 		}
 		if(audioUri != null) {
 			play_audio.setEnabled( true );
-			play_audio.setVisibility( ImageView.VISIBLE );
+			play_audio.setVisibility( View.VISIBLE );
 		}else {
 			play_audio.setEnabled( false );
-			play_audio.setVisibility( ImageView.INVISIBLE );
+			play_audio.setVisibility( View.INVISIBLE );
 		}
 
 		if ( todo != null ) {
